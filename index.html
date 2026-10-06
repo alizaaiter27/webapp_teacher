@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zero to Live: Web Development</title>
+  <meta name="description" content="A friendly, interactive course that takes complete beginners from zero coding experience to a live website.">
+  <script>
+    // Apply the saved theme before first paint to avoid a flash.
+    try {
+      var s = JSON.parse(localStorage.getItem('ztl-progress-v1') || '{}');
+      var t = s.theme || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = t;
+    } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open course menu" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true">🚀</span>
+      <span class="brand-text">Zero to Live<small>Web Development</small></span>
+    </a>
+    <div class="top-progress">
+      <div class="bar" id="topBar" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="barFill"></span></div>
+      <span class="pct" id="pctText">0%</span>
+    </div>
+    <button class="icon-btn" id="themeBtn" aria-label="Switch to dark mode"></button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Course navigation"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+    <main id="main" class="main" tabindex="-1"></main>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="content/course.js"></script>
+  <script src="content/m4.js"></script>
+  <script src="content/m5.js"></script>
+  <script src="content/m6.js"></script>
+  <script src="content/m7.js"></script>
+  <script src="content/m8.js"></script>
+  <script src="content/m9.js"></script>
+  <script src="content/m10.js"></script>
+  <script src="content/glossary.js"></script>
+  <script src="content/checklist.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
