@@ -1,4 +1,4 @@
-# 🚀 Zero to Live: Web Development
+#  Zero to Live: Web Development
 
 A free, interactive course that takes complete beginners from zero coding experience to a live website. It runs in the browser with no build step, no framework, and no backend.
 
@@ -18,10 +18,10 @@ A free, interactive course that takes complete beginners from zero coding experi
 
 | # | Module | Lessons |
 |---|--------|---------|
-| 1 | 🌐 How the Web Works | 5 |
+| 1 | How the Web Works | 5 |
 | 2 | Setting Up Your Workspace | 4 |
 | 3 | HTML: The Structure of the Web | 8 |
-| 4 | 🎨 CSS: Making It Beautiful | 8 |
+| 4 | CSS: Making It Beautiful | 8 |
 | 5 | JavaScript: Adding Interactivity | 7 |
 | 6 | Building a Real Project | 7 |
 | 7 | Best Practices | 5 |
