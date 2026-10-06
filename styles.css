@@ -207,6 +207,14 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.015em; }
 .side-mod.open .chev { transform: rotate(90deg); }
 .side-lessons { list-style: none; margin: 2px 0 8px; padding: 0 0 0 22px; display: none; }
 .side-mod.open .side-lessons { display: block; }
+.side-mod-done {
+  margin: 6px 0 2px 2px; padding: 6px 10px; border-radius: 9px; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 600;
+  background: transparent; color: var(--accent); border: 1px dashed var(--border);
+}
+.side-mod-done:hover { background: var(--accent-soft); border-color: var(--accent); }
+.side-mod-done.is-done { color: var(--muted); }
+.side-mod-done.is-done:hover { background: var(--surface-2); border-color: var(--border); }
 .side-lessons a, .side-lessons .planned {
   display: flex; align-items: flex-start; gap: 10px;
   padding: 7px 10px; border-radius: 9px; font-size: 14px; line-height: 1.4;
