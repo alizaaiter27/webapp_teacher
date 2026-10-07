@@ -89,6 +89,9 @@
     if (u.kind === 'lesson' && u.lesson.milestone) { msgs.push(u.lesson.milestone); big = true; }
     else msgs.push(u.kind === 'review' ? `Checkpoint done! You put Module ${u.module.num} into practice. 💪` : pick(['Lesson complete! Nice work. ✓', 'Another one done! ✓', 'Lesson complete. Keep the momentum going! ✓']));
     if (moduleProgress(u.module).complete) { msgs.push(`Module ${u.module.num} complete: ${u.module.title}! 🎉`); big = true; }
+    announceProgress(msgs, big);
+  }
+  function announceProgress(msgs, big) {
     const p = progress().pct;
     [25, 50, 75, 100].forEach((t) => {
       if (p >= t && !state.celebrated[t]) {
@@ -100,6 +103,21 @@
     save();
     celebrate(msgs, big);
     updateChrome();
+  }
+  // Mark (or unmark) every lesson + the checkpoint of a module in one go.
+  // Unmarking only clears completion; quiz scores and exercise goals are kept.
+  function setModuleDone(m, done) {
+    const us = units.filter((u) => u.module === m);
+    if (done) {
+      us.forEach((u) => { if (!state.completed[u.id]) state.completed[u.id] = Date.now(); });
+      announceProgress([`Module ${m.num} complete: ${m.title}! 🎉`], true);
+    } else {
+      us.forEach((u) => delete state.completed[u.id]);
+      save();
+      updateChrome();
+      toast(`Module ${m.num} marked as not done.`);
+    }
+    refreshView(m);
   }
 
   /* ============================================================
@@ -806,6 +824,20 @@ send('info',['✅ Form submitted! On a live site this would be sent to a server:
     const head = $('.lesson-head .meta', main);
     if (head && state.completed[u.id] && !$('.pill.ok', head)) head.insertAdjacentHTML('beforeend', '<span class="pill ok">✓ Completed</span>');
   }
+  // Re-sync the open page after progress changed from the sidebar.
+  function refreshView(m) {
+    const [kind, id] = location.hash.replace(/^#\/?/, '').split('/');
+    const u = kind === 'lesson' ? unitById[id] : kind === 'review' ? unitById[id + '-review'] : null;
+    if (u) {
+      if (u.module !== m) return;
+      refreshCompleteBar(u);
+      if (!state.completed[u.id]) { const pill = $('.lesson-head .meta .pill.ok', main); if (pill) pill.remove(); }
+    } else if (kind === 'module' || !kind) {
+      const y = window.scrollY;
+      kind ? renderModule(modules.find((x) => x.id === id)) : renderHome();
+      window.scrollTo(0, y);
+    }
+  }
   function bindCompleteBar(u) {
     main.addEventListener('click', (e) => {
       if (!e.target.closest('[data-complete]')) return;
@@ -1086,6 +1118,7 @@ send('info',['✅ Form submitted! On a live site this would be sent to a server:
             ${ready
               ? m.lessons.map((l) => `<li><a href="#/lesson/${l.id}" class="${state.completed[l.id] ? 'done' : ''}"${cur('#/lesson/' + l.id)}><span class="tick" aria-hidden="true">✓</span><span>${esc(l.title)}${state.completed[l.id] ? '<span class="sr-only"> (completed)</span>' : ''}</span></a></li>`).join('')
                 + `<li><a href="#/review/${m.id}" class="${state.completed[m.id + '-review'] ? 'done' : ''}"${cur('#/review/' + m.id)}><span class="tick" aria-hidden="true">✓</span><span>★ Checkpoint</span></a></li>`
+                + `<li><button type="button" class="side-mod-done${mp.complete ? ' is-done' : ''}" data-mod-done="${m.id}">${mp.complete ? '↺ Mark module not done' : '✓ Mark whole module done'}</button></li>`
               : m.planned.map((p) => `<li><span class="planned"><span class="tick" aria-hidden="true" style="border-style:dotted"></span><span>${esc(p.title)}</span></span></li>`).join('')}
           </ul>
         </div>`;
@@ -1103,6 +1136,16 @@ send('info',['✅ Form submitted! On a live site this would be sent to a server:
       expanded.has(id) ? expanded.delete(id) : expanded.add(id);
       head.parentElement.classList.toggle('open');
       head.setAttribute('aria-expanded', String(expanded.has(id)));
+      return;
+    }
+    const doneBtn = e.target.closest('[data-mod-done]');
+    if (doneBtn) {
+      const m = modules.find((x) => x.id === doneBtn.dataset.modDone);
+      const undo = moduleProgress(m).complete;
+      if (undo && !confirm(`Mark every lesson in Module ${m.num} as not done? Your quiz scores are kept.`)) return;
+      setModuleDone(m, !undo);
+      const again = $(`[data-mod-done="${m.id}"]`, sidebar);
+      if (again) again.focus();
       return;
     }
     if (e.target.closest('#resetBtn')) {
@@ -1171,7 +1214,7 @@ send('info',['✅ Form submitted! On a live site this would be sent to a server:
     const box = document.createElement('div');
     box.className = 'confetti';
     box.setAttribute('aria-hidden', 'true');
-    const colors = ['#6366f1', '#14b8a6', '#f59e0b', '#ec4899', '#22c55e', '#38bdf8'];
+    const colors = ['#0f766e', '#14b8a6', '#f59e0b', '#166534', '#22c55e', '#5eead4'];
     for (let i = 0; i < 70; i++) {
       const p = document.createElement('i');
       p.style.left = Math.random() * 100 + 'vw';
