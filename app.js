@@ -1214,7 +1214,7 @@ send('info',['✅ Form submitted! On a live site this would be sent to a server:
     const box = document.createElement('div');
     box.className = 'confetti';
     box.setAttribute('aria-hidden', 'true');
-    const colors = ['#6366f1', '#14b8a6', '#f59e0b', '#ec4899', '#22c55e', '#38bdf8'];
+    const colors = ['#0f766e', '#14b8a6', '#f59e0b', '#166534', '#22c55e', '#5eead4'];
     for (let i = 0; i < 70; i++) {
       const p = document.createElement('i');
       p.style.left = Math.random() * 100 + 'vw';
